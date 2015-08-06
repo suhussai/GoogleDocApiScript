@@ -1,33 +1,7 @@
 #! /bin/bash
 
-#  Requires: client_id, client_secret, redirect_uri, code,
-#  
-#
-#
-# current functionality
-# 
-# - can read a google doc file (.txt)
-#   and add to the content and upload it 
-#   back to google drive
-# - currently needs refresh_token to be set manually
-# 
-# Needs
-# - needs file I/O handling 
-# - be able to save variables
-#
-# future functionality
-#
-# - choose google doc title and create it and be upload via script
-# - check how much time left till access token
-#   expiration and renew if about to expire
-
-
-# reference
-# http://www.visualab.org/index.php/using-google-rest-api-for-analytics
-
 # file in google docs that will be updated 
-#docsFile="scriptTesting"
-docsFile="results"
+docsFile="testFile.txt"
 fileToUpload=$1
 
 
@@ -77,6 +51,10 @@ function getCredentials {
     fileCount=$(ls | egrep "^credentials$")
     if [ -z "$fileCount" ]
     then
+	echo "credentials not set..."
+
+	echo "Navigate here: https://console.developers.google.com/project"
+	echo "and enter your Client ID, Client Secret and Redirect Uri, as shown on that page"
 
 	echo "Client ID:"
 	read client_id
@@ -87,8 +65,8 @@ function getCredentials {
 	echo "redirect uri:"
 	read redirect_uri
 	
-	echo "Go here: https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/drive&redirect_uri=$redirect_uri&response_type=code&client_id=$client_id"
-	echo "and give me the code:"	
+	echo "Navigate here: https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/drive&redirect_uri=$redirect_uri&response_type=code&client_id=$client_id"
+	echo "and enter the code"	
 
 	echo "code:"
 	read code
@@ -141,7 +119,7 @@ function checkToken {
 	
 }
 
-client_id=$(cat credentials | awk '/client_id/ {print $3}')
+client_id=$(cat credentials 2>/dev/null | awk '/client_id/ {print $3}')
 if [ -z "$client_id" ]
 then
     getCredentials
