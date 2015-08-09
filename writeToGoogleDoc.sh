@@ -28,7 +28,11 @@ function updateDocFile {
 }
 
 function getFileID {
-    fileID=$(curl -X GET -H "Authorization: Bearer $access_token" https://www.googleapis.com/drive/v2/files | grep -B 20  $docsFile | grep -A 4 items | awk '/id/ {print $2}' | xargs)
+    # gets file id of given file
+    # getFileID file.txt
+#    fileID=$(curl -X GET -H "Authorization: Bearer $access_token" https://www.googleapis.com/drive/v2/files | grep -B 20  $1 | grep -A 4 items | awk '/id/ {print $2}' | xargs)
+
+    fileID=$(curl -X GET -H "Authorization: Bearer $access_token" https://www.googleapis.com/drive/v2/files | grep -m 1 -B 20 $1  | awk '/id/ {print $2}' | xargs | awk '// {print $1}')
     
     fileID="${fileID//,}"
 }
