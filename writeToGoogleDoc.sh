@@ -4,6 +4,7 @@
 docsFile="testFile.txt"
 fileToUpload=$1
 
+configFile="config"
 
 function readDocFile {
     # downloads google docs file for updating
@@ -52,7 +53,9 @@ function getRefreshToken {
 
 
 function getCredentials {
-    fileCount=$(ls | egrep "^credentials$")
+    # gets client_id, client_secret, redirect_uri
+    # and code and saves it to config file
+    fileCount=$(ls | egrep "^$configFile$")
     if [ -z "$fileCount" ]
     then
 	echo "credentials not set..."
@@ -84,9 +87,7 @@ function saveCredentials {
     # save credentials to a local file
     # so user only has to enter credentials
     # in the beginning
-
-    # generate random file name
-    fileName=credentials
+    fileName=$configFile
 
     echo "client_id = $client_id " > $fileName
     echo "client_secret = $client_secret" >> $fileName
@@ -104,8 +105,7 @@ function renewAccessToken {
     # trim last comma
     access_token="${access_token//,}"   
 
-    echo "access_token is $access_token"
-
+    echo "access_token = $access_token" >> $configFile
 }
 
 function checkToken {
@@ -123,15 +123,16 @@ function checkToken {
 	
 }
 
-client_id=$(cat credentials 2>/dev/null | awk '/client_id/ {print $3}')
+client_id=$(cat $configFile 2>/dev/null | awk '/client_id/ {print $3}')
 if [ -z "$client_id" ]
 then
     getCredentials
 else
-    client_secret=$(cat credentials | awk '/client_secret/ {print $3}')
-    redirect_uri=$(cat credentials | awk '/redirect_uri/ {print $3}')
-    code=$(cat credentials | awk '/code/ {print $3}')
-    refresh_token=$(cat credentials | awk '/refresh_token/ {print $3}')
+    client_secret=$(cat $configFile | awk '/client_secret/ {print $3}')
+    redirect_uri=$(cat $configFile | awk '/redirect_uri/ {print $3}')
+    code=$(cat $configFile | awk '/code/ {print $3}')
+    refresh_token=$(cat $configFile | awk '/refresh_token/ {print $3}')
+    access_token=$(cat $configFile | awk '/access_token/ {print $3}')
 fi
 
 
@@ -139,11 +140,11 @@ checkToken
 
 if [ "$expired" = true ]
 then
-    refresh_token=$(cat credentials | awk '/refresh_token/ {print $3}')
+    refresh_token=$(cat $configFile | awk '/refresh_token/ {print $3}')
     if [ -z "$refresh_token" ]
     then
 	getRefreshToken
-	echo "refresh_token = $refresh_token" >> credentials
+	echo "refresh_token = $refresh_token" >> $configFile
     fi
     
     renewAccessToken
