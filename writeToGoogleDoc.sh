@@ -1,14 +1,16 @@
 #! /bin/bash
 
 # file in google docs that will be updated 
-docsFile="testFile.txt"
-fileToUpload=$1
-
+sourceFile=$1
+targetFile=$2
 configFile="config"
 
 function readDocFile {
     # downloads google docs file for updating
-    getFileID
+    # argument is the file to be read
+    fileToRead=$1
+
+    getFileID $fileToRead
     curl -X GET -H "Authorization: Bearer $access_token"  https://www.googleapis.com/drive/v2/files/$fileID?alt=media > /tmp/toUpload
     echo -e "\n" >> /tmp/toUpload
 }
@@ -16,14 +18,16 @@ function readDocFile {
 function updateDocFile {
     # updates doc file 
     # the update file will be the first argument 
-    # ex: updateDocFile "new addition to doc file" 
+    # the file being updated will be the second argument
+    # ex: updateDocFile fileToUpload.txt docTargetFile.txt 
 
     update=$1
+    targetFile=$2
 
-    readDocFile
+    readDocFile $targetFile
     cat $update >> /tmp/toUpload
 
-    getFileID
+    #getFileID $targetFile
     curl -X PUT -H "Authorization: Bearer $access_token" --data-ascii "$(cat /tmp/toUpload)"  https://www.googleapis.com/upload/drive/v2/files/$fileID
     
 }
@@ -45,9 +49,6 @@ function getRefreshToken {
     refresh_token=$(curl -H "Content-Type: application/x-www-form-urlencoded" -d "code=$code&client_id=$client_id&client_secret=$client_secret&redirect_uri=$redirect_uri&grant_type=authorization_code" https://accounts.google.com/o/oauth2/token | awk '/refresh_token/ {print $3}' | xargs)
     
     refresh_token="${refresh_token//,}"
-    
-    
-
     echo "refresh_token is $refresh_token"
 }
 
@@ -151,14 +152,13 @@ then
 fi
 
 # Test
-if [ -z "$fileToUpload" ] 
+if [ -z "$sourceFile" ] 
 then
     echo "file to upload?"
     read fileToUpload
 fi
 
-updateDocFile $fileToUpload
-#echo "Sceptic/realist: prolly not" >> uploadThis
-#updateDocFile "uploadThis"
+
+updateDocFile $sourceFile $targetFile
 
 echo "DONE"
