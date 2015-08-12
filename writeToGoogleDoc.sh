@@ -146,8 +146,7 @@ function renewAccessToken {
     # trim last comma
     access_token="${access_token//,}"   
 
-
-    echo "access_token = $access_token" >> $configFile
+    sed -i "/access_token = */c\access_token = $access_token" $configFile
 }
 
 function checkType {
