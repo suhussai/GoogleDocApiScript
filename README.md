@@ -5,9 +5,11 @@ Requires: client_id, client_secret, redirect_uri, code,
   
 Current Functionality
  
-- can read a google doc file (.txt)
+- can read a google doc file (.txt)  or native google doc files
   and add to the content and upload it 
   back to google drive
+
+- added -h help feature that shows basic usage info
 
 Needs:
 - funtionality to specify which file user wants to 
@@ -17,8 +19,8 @@ Needs:
   in google docs
 - check if access_token needs refreshing ---> done
 
-Future Functionality
-
+TODO
+- move into separate files for easier organization
 - choose google doc title and create it and be upload via script
 
 Usage:
