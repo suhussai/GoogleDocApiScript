@@ -42,7 +42,16 @@ function readDocFile {
     fileToRead=$1
 
     getFileID $fileToRead
-    curl -X GET -H "Authorization: Bearer $access_token"  https://www.googleapis.com/drive/v2/files/$fileID?alt=media > /tmp/toUpload
+    
+    checkType $fileID
+    
+    if [ "$googleDocFormat" = true ]
+    then
+	curl -X GET -H "Authorization: Bearer $access_token" "https://docs.google.com/feeds/download/documents/export/Export?id=$fileID&exportFormat=txt" > /tmp/toUpload
+    else
+	curl -X GET -H "Authorization: Bearer $access_token"  https://www.googleapis.com/drive/v2/files/$fileID?alt=media > /tmp/toUpload	
+    fi
+    
     echo -e "\n" >> /tmp/toUpload
 }
 
@@ -101,13 +110,13 @@ function getCredentials {
 	echo "Client Secret:"
 	read client_secret
 
-	echo "redirect uri:"
+	echo "Redirect Uri:"
 	read redirect_uri
 	
 	echo "Navigate here: https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/drive&redirect_uri=$redirect_uri&response_type=code&client_id=$client_id"
 	echo "and enter the code"	
 
-	echo "code:"
+	echo "Code:"
 	read code
 
 	saveCredentials
@@ -137,6 +146,7 @@ function renewAccessToken {
     # trim last comma
     access_token="${access_token//,}"   
 
+
     echo "access_token = $access_token" >> $configFile
 }
 
@@ -156,7 +166,7 @@ function checkType {
 	googleDocFormat=true
     else
 	googleDocFormat=false
-    
+    fi
 }
 
 function checkToken {
