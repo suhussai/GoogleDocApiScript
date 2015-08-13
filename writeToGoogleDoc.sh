@@ -1,8 +1,13 @@
 #! /bin/bash
 
+# get options file
+source opts.sh
 
+# get authentication functions
+source authenticationFunctions.sh
 
 # get helper functions
+source helperFunctions.sh
 
 # file in google docs that will be updated 
 sourceFile=$1
