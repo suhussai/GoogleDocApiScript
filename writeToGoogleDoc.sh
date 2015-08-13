@@ -38,7 +38,9 @@ configFile="config"
 
 function readDocFile {
     # downloads google docs file for updating
-    # argument is the file to be read
+    # argument is the title of 
+    # the file to be read
+
     fileToRead=$1
 
     getFileID $fileToRead
