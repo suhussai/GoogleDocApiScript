@@ -7,10 +7,11 @@ Current Functionality
 - can read a google doc file (.txt)  or native google doc files
   and add to the content and upload it 
   back to google drive
-
+- can also read and update google docs native format file (buggy)
 - added -h help feature that shows basic usage info
 
 TODO:
+- separated logical components into different files --> done
 - funtionality to specify which file user wants to 
   update ---> done
  - perhaps display list of files available to user
