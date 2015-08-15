@@ -27,12 +27,15 @@ function readDocFile {
     
     if [ "$googleDocFormat" = true ]
     then
-	curl -X GET -H "Authorization: Bearer $access_token" "https://docs.google.com/feeds/download/documents/export/Export?id=$fileID&exportFormat=txt" > /tmp/toUpload
+	curl -X GET -H "Authorization: Bearer $access_token" "https://docs.google.com/feeds/download/documents/export/Export?id=$fileID&exportFormat=txt" > /tmp/tmpFile
+	echo "" >> /tmp/tmpFile
+
+	./lineFixer.sh /tmp/tmpFile /tmp/toUpload 
     else
 	curl -X GET -H "Authorization: Bearer $access_token"  https://www.googleapis.com/drive/v2/files/$fileID?alt=media > /tmp/toUpload	
     fi
     
-    echo -e "\n" >> /tmp/toUpload
+#    echo -e "\n" >> /tmp/toUpload
 }
 
 function updateDocFile {
