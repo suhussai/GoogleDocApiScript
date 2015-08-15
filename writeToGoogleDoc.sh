@@ -12,7 +12,6 @@ source helperFunctions.sh
 # file in google docs that will be updated 
 sourceFile=$1
 targetFile=$2
-configFile="config"
 
 function readDocFile {
     # downloads google docs file for updating

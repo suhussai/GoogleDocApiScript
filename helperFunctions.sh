@@ -1,3 +1,4 @@
+configFile="config"
 
 function checkType {
     # checks if a file is 
