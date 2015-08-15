@@ -33,9 +33,7 @@ function listDocFiles {
     cat tmpfiles3.txt | grep title | sort -u > files.txt
 
     cat files.txt
-    rm files.txt
-
-    rm tmpfiles.txt tmpfiles2.txt tmpfiles3.txt
+    rm files.txt tmpfiles.txt tmpfiles2.txt tmpfiles3.txt
 }
 
 client_id=$(cat $configFile 2>/dev/null | awk '/client_id/ {print $3}')
