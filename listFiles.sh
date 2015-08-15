@@ -32,6 +32,9 @@ function listDocFiles {
     # extract only titles and sort and filter out any duplicates
     cat tmpfiles3.txt | grep title | sort -u > files.txt
 
+    cat files.txt
+    rm files.txt
+
     rm tmpfiles.txt tmpfiles2.txt tmpfiles3.txt
 }
 
