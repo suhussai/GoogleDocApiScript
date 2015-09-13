@@ -4,7 +4,7 @@
 source authenticationFunctions.sh
 IFS=","
 
-function listDocFiles {
+function listFiles {
     
     documents="vnd.google-apps.document,plain"
     types=$1
@@ -34,3 +34,12 @@ function listDocFiles {
     rm files.txt tmpfiles.txt tmpfiles2.txt tmpfiles3.txt
 }
 
+# http://stackoverflow.com/questions/2683279/how-to-detect-if-a-script-is-being-sourced
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]] 
+then
+    # script is NOT being sourced ...
+    checkAndGetCredentialsIfNeeded
+    checkAndRenewTokenIfNeeded
+    listFiles
+fi

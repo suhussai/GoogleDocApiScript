@@ -84,41 +84,22 @@ function updateDocFile {
     
 }
 
-client_id=$(cat $configFile 2>/dev/null | awk '/client_id/ {print $3}')
-if [ -z "$client_id" ]
+# http://stackoverflow.com/questions/2683279/how-to-detect-if-a-script-is-being-sourced
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]] 
 then
-    getCredentials
-else
-    client_secret=$(cat $configFile | awk '/client_secret/ {print $3}')
-    redirect_uri=$(cat $configFile | awk '/redirect_uri/ {print $3}')
-    code=$(cat $configFile | awk '/code/ {print $3}')
-    refresh_token=$(cat $configFile | awk '/refresh_token/ {print $3}')
-    access_token=$(cat $configFile | awk '/access_token/ {print $3}')
-fi
+    # script is NOT being sourced ...
+    checkAndGetCredentialsIfNeeded
+    checkAndRenewTokenIfNeeded
 
-
-checkToken 
-
-if [ "$expired" = true ]
-then
-    refresh_token=$(cat $configFile | awk '/refresh_token/ {print $3}')
-    if [ -z "$refresh_token" ]
+    # Test
+    if [ -z "$sourceFile" ] 
     then
-	getRefreshToken
-	echo "refresh_token = $refresh_token" >> $configFile
+	echo "file to upload?"
+	read fileToUpload
     fi
-    
-    renewAccessToken
+
+    updateDocFile $sourceFile $targetFile
 fi
-
-# Test
-if [ -z "$sourceFile" ] 
-then
-    echo "file to upload?"
-    read fileToUpload
-fi
-
-
-updateDocFile $sourceFile $targetFile
 
 echo "DONE"
