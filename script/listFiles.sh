@@ -3,10 +3,10 @@
 
 source authenticationFunctions.sh
 IFS=","
-documents="vnd.google-apps.document,plain"
 
 function listDocFiles {
     
+    documents="vnd.google-apps.document,plain"
     types=$1
 
     curl -X GET -H "Authorization: Bearer $access_token" https://www.googleapis.com/drive/v2/files/ > tmpfiles.txt
@@ -34,5 +34,3 @@ function listDocFiles {
     rm files.txt tmpfiles.txt tmpfiles2.txt tmpfiles3.txt
 }
 
-
-listDocFiles "$documents"
