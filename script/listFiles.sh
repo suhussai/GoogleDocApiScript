@@ -6,8 +6,7 @@ IFS=","
 
 function listFiles {
     
-    documents="vnd.google-apps.document,plain"
-    types=$1
+    types="vnd.google-apps.document,plain"
 
     curl -X GET -H "Authorization: Bearer $access_token" https://www.googleapis.com/drive/v2/files/ > tmpfiles.txt
 
