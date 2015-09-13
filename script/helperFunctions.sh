@@ -1,4 +1,4 @@
-configFile="config"
+configFile="../script/config"
 
 function checkType {
     # checks if a file is 
