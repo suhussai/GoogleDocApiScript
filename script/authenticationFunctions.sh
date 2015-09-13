@@ -94,29 +94,35 @@ function renewAccessToken {
     sed -i "/access_token = */c\access_token = $access_token" $configFile
 }
 
-client_id=$(cat $configFile 2>/dev/null | awk '/client_id/ {print $3}')
-if [ -z "$client_id" ]
-then
-    getCredentials
-else
-    client_secret=$(cat $configFile | awk '/client_secret/ {print $3}')
-    redirect_uri=$(cat $configFile | awk '/redirect_uri/ {print $3}')
-    code=$(cat $configFile | awk '/code/ {print $3}')
-    refresh_token=$(cat $configFile | awk '/refresh_token/ {print $3}')
-    access_token=$(cat $configFile | awk '/access_token/ {print $3}')
-fi
-
-
-checkToken 
-
-if [ "$expired" = true ]
-then
-    refresh_token=$(cat $configFile | awk '/refresh_token/ {print $3}')
-    if [ -z "$refresh_token" ]
+function checkAndGetCredentialsIfNeeded {
+    client_id=$(cat $configFile 2>/dev/null | awk '/client_id/ {print $3}')
+    if [ -z "$client_id" ]
     then
-	getRefreshToken
-	echo "refresh_token = $refresh_token" >> $configFile
+	getCredentials
+    else
+	client_secret=$(cat $configFile | awk '/client_secret/ {print $3}')
+	redirect_uri=$(cat $configFile | awk '/redirect_uri/ {print $3}')
+	code=$(cat $configFile | awk '/code/ {print $3}')
+	refresh_token=$(cat $configFile | awk '/refresh_token/ {print $3}')
+	access_token=$(cat $configFile | awk '/access_token/ {print $3}')
     fi
     
-    renewAccessToken
-fi
+}
+
+function checkAndRenewTokenIfNeeded {
+    checkToken 
+    
+    if [ "$expired" = true ]
+    then
+	refresh_token=$(cat $configFile | awk '/refresh_token/ {print $3}')
+	if [ -z "$refresh_token" ]
+	then
+	    getRefreshToken
+	    echo "refresh_token = $refresh_token" >> $configFile
+	fi
+	
+	renewAccessToken
+    fi
+    
+}
+
