@@ -1,5 +1,5 @@
 
-function readDocFile {
+function readFile {
     # downloads google docs file for updating
     # argument is the title of the file to be read
 
@@ -30,5 +30,5 @@ then
     # script is NOT being sourced ...
     checkAndGetCredentialsIfNeeded
     checkAndRenewTokenIfNeeded
-    readDocFile $1
+    readFile $1
 fi

@@ -6,8 +6,8 @@ source opts.sh
 # get authentication functions
 source authenticationFunctions.sh
 
-# get readDocFile function
-source readDocFile.sh
+# get readFile function
+source readFile.sh
 
 # get helper functions
 source helperFunctions.sh
@@ -29,7 +29,7 @@ function appendToFile {
     update=$1
     targetFile=$2
 
-    readDocFile $targetFile > /tmp/toUpload # read google doc file
+    readFile $targetFile > /tmp/toUpload # read google doc file
     echo "$update" >> /tmp/toUpload # append new content to it
     
     writeToFile "$(cat /tmp/toUpload)" $targetFile
